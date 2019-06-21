@@ -32,20 +32,25 @@ class ShareViewController: UIViewController {
     }
     
     @IBAction func saveCore(_ sender: UIBarButtonItem) {
-        let context = getContext()
+        let alert = UIAlertController(title:"나의 레시피에 저장하시겠습니까?",message: "",preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { action in
+            let context = self.getContext()
         let entity = NSEntityDescription.entity(forEntityName: "Recipes", in:context)
         
         let object = NSManagedObject(entity: entity!, insertInto: context)
-        object.setValue(textName.text, forKey: "name")
-        object.setValue(textIngredient.text, forKey: "ingredient")
-        object.setValue(textRecipe.text, forKey: "recipe")
-        object.setValue(Date(),forKey:"date")
+            object.setValue(self.textName.text, forKey: "name")
+            object.setValue(self.textIngredient.text, forKey: "ingredient")
+            object.setValue(self.textRecipe.text, forKey: "recipe")
+            object.setValue(Date(),forKey:"date")
         do {
             try context.save()
             print("saved!")
         } catch let error as NSError {
             print("Could not save \(error), \(error.userInfo)")
         }
+        }))
+        alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
+        self.present(alert, animated: true)
     }
     
     /*
